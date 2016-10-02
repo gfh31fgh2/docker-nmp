@@ -5,7 +5,7 @@
 <br>
 Описываю как с этим рабоать.
 <br>
-ubuntu 16.04
+Устанавливаем vps/dedic с ubuntu 16.04
 <br>
 apt-get update <br>
 apt-get upgrade <br>
@@ -14,11 +14,13 @@ apt-get install docker.io <br>
 docker pull mysql <br>
 docker pull phusion/baseimage - это хорошая сборка убунту с минимум функций - как раз подойдет для контейнеров докера (все строится на нем поэтому у кого есть силы - рекомендую покопаться в этом дистрибутиве на наличие косяков хотя и говорят там все круто настроили) <br>
 docker pull phusion/baseimage:0.9.15 - эта версия нужно потому, что там есть php5, если устанавливать все со стандартным - то тогда везде будет php 7.0 - который, увы, не поддерживается, некоторыми CMS  <br>
-docker pull mk77/nginx_image <br>
-docker pull mk77/php5fpm_image <br>
+docker pull mk77/nginx_image <br> - это имадж nginx, посмотреть что он из себя представляет посмотрев dockerfile на hub.docker.com - причем этот имадж строится исходя из phusion/baseimage - то есть сначала ставится минимальная убунту, затем на нее ставится минимальный nginx
+docker pull mk77/php5fpm_image <br> - это имадж php5-fpm, посмотреть можно там же. Ничего сверхестественного, стандартные настройки для php.in и прч - здесь все аналогично nginx_image
 <br><br>
-Немного о структуре, чтобы сразу стало понятно как и что работает.
+Немного о структуре контейнеров, чтобы сразу стало понятно как и что работает.
 <img src="https://habrastorage.org/files/769/d49/97e/769d4997e8e64b83be043f8e95189d95.png" alt="docker nginx php5-fpm mysql" width="500px;" />
+<br><br>
+А здесь о структуре файлов - где кто что хранит. 
 <img src="https://habrastorage.org/files/cbb/6d6/f57/cbb6d6f5778a4e4087e84f5450b38887.png" alt="docker nginx php5-fpm mysql" width="500px;" />
 ---------------------------------------------------------------------
 Создаем 8 контейнеров для хранения смежных данных
@@ -65,14 +67,17 @@ docker run --name nginx-container -v nginx_settings:/etc/nginx -v nglogs:/var/lo
  <br> <br>
 Все связка готова и должна работать. <br>
 Кажется все просто но блять я убил 2 дня на то, чтобы разобраться, что где как. <br>
+<br>
 О связке. <br>
 Все смежные данные где нужна работа между двумя контейнерами - хранятся на docker volumes <br>
 Они хранятся в папке /var/lib/docker/volumes/ <br>
 Для удобства на них сделаны ссылки в папке /home/work <br>
-Для того, чтобы заработал скрипт php - нужно проложить стандартный nginx конфиг который вы обычно кладете по пути /etc/nginx/sites-enabled/sitejashd.com <br>
-Класть теперь нужно это в /home/work/nginx_settings/sites-enabled/ashd.com <br>
+Для того, чтобы заработали скрипты php - нужно проложить стандартный nginx конфиг который вы обычно кладете по пути /etc/nginx/sites-enabled/sitejashd.com <br>
+Класть теперь нужно это в /home/work/nginx_settings/sites-enabled/site.com <br>
 По факту именно сюда и обращается ваш контейнер nginx <br>
 Можете этот контейнер убивать или делать что-то еще, конфиг никуда не денется - он всегда у вас. <br>
 Подключиться к вашему контейнеру можете так: <br>
 docker  exec -it php5fpm-container bash <br>
+Если нужно перезагрузить контейнер docker restart nginx-container <br>
+
 
