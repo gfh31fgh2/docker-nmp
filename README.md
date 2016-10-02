@@ -71,3 +71,6 @@ docker run --name nginx-container -v nginx_settings:/etc/nginx -v nglogs:/var/lo
 Класть теперь нужно это в /home/work/nginx_settings/sites-enabled/ashd.com <br>
 По факту именно сюда и обращается ваш контейнер nginx <br>
 Можете этот контейнер убивать или делать что-то еще, конфиг никуда не денется - он всегда у вас. <br>
+Подключиться к вашему контейнеру можете так: <br>
+docker  exec -it php5fpm-container bash <br>
+
