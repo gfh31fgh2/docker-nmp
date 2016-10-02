@@ -23,7 +23,7 @@ docker pull mk77/php5fpm_image <br> - это имадж php5-fpm, посмотр
 А здесь о структуре файлов - где кто что хранит. 
 <img src="https://habrastorage.org/files/cbb/6d6/f57/cbb6d6f5778a4e4087e84f5450b38887.png" alt="docker nginx php5-fpm mysql" width="500px;" />
 ---------------------------------------------------------------------
-Создаем 8 контейнеров для хранения смежных данных
+Создаем 8 volumes для хранения смежных данных
 ---------------------------------------------------------------------
 docker volume create --name mysql_data <br>
 docker volume create --name mysql_socket <br>
@@ -50,17 +50,17 @@ ln -s /var/lib/docker/volumes/siteplace/_data siteplace <br>
  <br>
 
 ---------------------------------------------------------------------
-Создаем mysql контейнер исходя из нашего имаджа mysql (официальный) - при этом данных хранятся в volume что мы создали ранее
+Создаем mysql контейнер исходя из нашего имаджа mysql (официальный) - при этом данные хранятся в volume что мы создали ранее
 ---------------------------------------------------------------------
 docker run --name mysql -v mysql_socket:/var/run/mysqld -v mysql_data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=12345 -e MYSQL_DATABASE=testdb -e MYSQL_USER=test -e MYSQL_PASSWORD=test -d mysql  <br>
 
 ---------------------------------------------------------------------
-Создаем php5fpm контейнер исходя из нашего имаджа php5fpm_image (свой сделанный) - при этом данных хранятся в volume что мы создали ранее
+Создаем php5fpm контейнер исходя из нашего имаджа php5fpm_image (свой сделанный) - при этом данные хранятся в volume что мы создали ранее
 ---------------------------------------------------------------------
 docker run --name php5fpm-container --privileged -v phpfpm_settings:/etc/php5 -v phplogs:/var/log/php5 -v siteplace:/home/www/siteplace -v mysql_socket:/var/run/mysqld  -v phpfpm_socket:/var/run/php5-fpm --link mysql:mysql -t php5fpm_image <br>
 
 ----------------------------------------------------------------------
-Создаем nginx контейнер исходя из нашего имаджа nginx_image (свой сделанный) - при этом данных хранятся в volume что мы создали ранее
+Создаем nginx контейнер исходя из нашего имаджа nginx_image (свой сделанный) - при этом данные хранятся в volume что мы создали ранее
 ----------------------------------------------------------------------
 docker run --name nginx-container -v nginx_settings:/etc/nginx -v nglogs:/var/log/nginx -v siteplace:/home/www/siteplace -v phpfpm_socket:/var/run/php5-fpm --link php5fpm-container:php5-fpm -p 80:80 -p 443:443 -t nginx_image  <br>
 
