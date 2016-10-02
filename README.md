@@ -16,7 +16,9 @@ docker pull phusion/baseimage - это хорошая сборка убунту 
 docker pull phusion/baseimage:0.9.15 - эта версия нужно потому, что там есть php5, если устанавливать все со стандартным - то тогда везде будет php 7.0 - который, увы, не поддерживается, некоторыми CMS  <br>
 docker pull mk77/nginx_image <br>
 docker pull mk77/php5fpm_image <br>
-docker  <br>
+<br><br>
+Немного о структуре, чтобы сразу стало понятно как и что работает.
+<img src="https://habrastorage.org/files/769/d49/97e/769d4997e8e64b83be043f8e95189d95.png" alt="docker nginx php5-fpm mysql" />
 
 ---------------------------------------------------------------------
 Создаем 8 контейнеров для хранения смежных данных
